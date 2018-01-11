@@ -38,3 +38,15 @@ function updateDocument(db, callback){
     callback(result);
   })
 }
+
+function removeDocument(db, callback) {
+  const collection = db.collection('edx-course-students');
+
+  const name = "Bob"
+  collection.remove({name : name}, (error, result) => {
+    if (error) return process.exit(1);
+    console.log(result.result.n)
+    console.log("removed from document")
+    callback(result)
+  })
+}
