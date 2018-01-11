@@ -7,7 +7,9 @@ MongoClient.connect(url, (err, db) => {
   if (err) return process.exit(1);
   console.log("You connected");
   insertDocuments(db, () => {
-    db.close()
+    updateDocument(db, ()=>{
+      db.close()
+    })
   })
 })
 
@@ -23,4 +25,16 @@ function insertDocuments(db, callback){
     console.log("Inserted 3 documents in teh edx course celection")
     callback(result);
   });
+}
+
+function updateDocument(db, callback){
+  const collection = db.collection('edx-course-students');
+
+  const name = "Peter";
+  collection.update({name: name}, {$set: {grade: 'A'}}, (error, result) => {
+    if (error) return process.exit(1)
+    console.log(result.result.n)
+    console.log("Updated the student document")
+    callback(result);
+  })
 }
