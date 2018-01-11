@@ -8,7 +8,11 @@ MongoClient.connect(url, (err, db) => {
   console.log("You connected");
   insertDocuments(db, () => {
     updateDocument(db, ()=>{
-      db.close()
+      removeDocument(db, () => {
+        findDocuments(db, () => {
+          db.close()
+        })
+      })
     })
   })
 })
@@ -48,5 +52,17 @@ function removeDocument(db, callback) {
     console.log(result.result.n)
     console.log("removed from document")
     callback(result)
+  })
+}
+
+function findDocuments(db, callback){
+  const collection = db.collection('edx-course-students')
+
+  collection.find({}).toArray((error, docs) => {
+    if (error) return process.exit(1)
+    console.log(2, docs.length)
+    console.log("Found the following documents: ")
+    console.dir(docs)
+    callback(docs)
   })
 }
